@@ -23,7 +23,7 @@ def iterate_samples(sample_num, val_num, test_num, val_options=3):
         for vals in val_indices[choice]:
             trains = np.array(list(rm_samples.difference(set(vals))))
             indices.append((trains, vals, np.array(tests)))
-        
+
     return indices
 
 def iterate_hyperparas(use_default=False):
@@ -43,7 +43,7 @@ def iterate_hyperparas(use_default=False):
     options['initializer'].append(initializers.TruncatedNormal(mean=0.0, stddev=0.05, seed=None))
     ## kernel_regularizer
     options['kernel_regularizer'] = []
-    options['kernel_regularizer'].append(None)     
+    options['kernel_regularizer'].append(None)
     options['kernel_regularizer'].append(regularizers.l1(0.0001))
     options['kernel_regularizer'].append(regularizers.l1(0.001))
     options['kernel_regularizer'].append(regularizers.l1(0.01))
@@ -58,7 +58,7 @@ def iterate_hyperparas(use_default=False):
     options['kernel_regularizer'].append(regularizers.l1_l2(0.1))
     ## activity_regularizer
     options['activity_regularizer'] = []
-    options['activity_regularizer'].append(None)     
+    options['activity_regularizer'].append(None)
     options['activity_regularizer'].append(regularizers.l1(0.0001))
     options['activity_regularizer'].append(regularizers.l1(0.001))
     options['activity_regularizer'].append(regularizers.l1(0.01))
@@ -73,7 +73,7 @@ def iterate_hyperparas(use_default=False):
     options['activity_regularizer'].append(regularizers.l1_l2(0.1))
     ## bias_regularizer
     options['bias_regularizer'] = []
-    options['bias_regularizer'].append(None)     
+    options['bias_regularizer'].append(None)
     options['bias_regularizer'].append(regularizers.l1(0.0001))
     options['bias_regularizer'].append(regularizers.l1(0.001))
     options['bias_regularizer'].append(regularizers.l1(0.01))
@@ -171,10 +171,11 @@ def generate_model_report(model):
     pass
 
 def main():
-    # idxs = iterate_samples(20, 2, 1)
-    # print(idxs)
-    options = iterate_hyperparas()
-    print(options)
+    idxs = iterate_samples(20, 2, 1)
+    print(idxs)
+    
+    #options = iterate_hyperparas()
+    #print(options)
 
 if __name__ == '__main__':
     main()

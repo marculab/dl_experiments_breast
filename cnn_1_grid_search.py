@@ -34,7 +34,8 @@ bsize = 50
 ##
 epochs = 30
 ## callback
-model_callback = TensorBoard(log_dir='./logs', histogram_freq=0, write_graph=True, write_images=False)
+##model_callback = TensorBoard(log_dir='./logs', histogram_freq=0, write_graph=True, write_images=False)
+csv_logger = CSVLogger("./logs/cnn_1_proof.log.csv")
 
 def make_model():
     ## model
@@ -81,26 +82,29 @@ def make_model():
 
 def experiment(model):
     ## experiment
+    logpath = './logs'
     ## case 12, 14 for test
     ## case 18 for validation
     ## other case for traning
     x_list, y_list = load_waveforms()
     x_list = positve_samples(x_list)
-    x_list = split_by_channel(x_list)
+    x_list = split_channel(x_list)
     x_list = apply_resample(x_list, 648)
     y_list = binary_label(y_list)
     for i in range(x_list.shape[0]):
+        x_list[i] = np.transpose(x_list[i], axes=(0, 2, 1)) ## transpose to (number of points, 648, 4)
         print(x_list[i].shape)
 
     # val_idx = [17]
     # test_idx = [11, 13]
     ## run iterate_samples
     ## use test set as validation, to see the loss change for each fold
-    indices = iterate_samples(20, 1, 2, 1)
+    indices = iterate_samples(20, 1, 2, 1) #sample num, val num, test num, val options
     for idx in indices:
         val_idx = idx[2]
         test_idx = [] ## no test set
-
+        print("validation set: ", val_idx)
+        
         train_list_x = []
         train_list_y = []
         val_list_x = []
@@ -108,7 +112,7 @@ def experiment(model):
         test_list_x = []
         test_list_y = []
         for idx in range(x_list.shape[0]):
-            if idx not in (val_idx + test_idx):
+            if idx not in (val_idx.tolist() + test_idx):
                 train_list_x.append(x_list[idx])
                 train_list_y.append(y_list[idx])
                 
@@ -135,13 +139,14 @@ def experiment(model):
         train_list_y = np_utils.to_categorical(train_list_y, num_classes=2)
         val_list_y = np_utils.to_categorical(val_list_y, num_classes=2)
         test_list_y = np_utils.to_categorical(test_list_y, num_classes=2)
-
+        
+        csv_logger = CSVLogger("./logs/cnn_crossval_{}".format(val_idx))
         model.fit(train_list_x, train_list_y,
                 epochs=epochs,
-                batch_size=bsize
+                batch_size=bsize,
                 verbose=2,
-                validation_data=(test_list_x, test_list_y),
-                callbacks=[model_callback])
+                validation_data=(val_list_x, val_list_y),
+                callbacks=[csv_logger])
 
 def main():
     model = make_model()

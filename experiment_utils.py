@@ -24,7 +24,7 @@ def positve_samples(xlist):
     return np.array(xl_new)
 
 ## apply to loaded dataset
-def split_by_channel(xlist):
+def split_channel(xlist):
     ## input as (n, 2500)
     def standard_resample(arr):
         return resample(arr, 2500)
@@ -36,7 +36,7 @@ def split_by_channel(xlist):
             print("resample")
             print(points.shape)
             points = np.apply_along_axis(standard_resample, axis=1, arr=points)
-        points = points.reshape((points.shape[0], 625, 4))
+        points = points.reshape((points.shape[0], 4, 625))
         xl_new.append(points)
     return np.array(xl_new)
 
@@ -49,7 +49,7 @@ def apply_resample(xlist, outdim):
     xl_new = []
     for sample in range(xlist.shape[0]):
         points = xlist[sample]
-        points = np.apply_along_axis(resample_waveform, axis=1, arr=points)
+        points = np.apply_along_axis(resample_waveform, axis=2, arr=points)
         xl_new.append(points)
     return np.array(xl_new)
 
