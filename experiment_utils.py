@@ -25,6 +25,7 @@ def positve_samples(xlist):
 
 ## apply to loaded dataset
 def split_channel(xlist):
+    ## this method is out of date since the dimension might be other than 625
     ## input as (n, 2500)
     def standard_resample(arr):
         return resample(arr, 2500)

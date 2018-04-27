@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 ## utitlities
 ## data loading
 datapath = Path('../dataset')
-xfile = 'X_features_spec.npy'
+xfile = 'X_features_spec_aligned.npy'
 yfile = 'Y_labels_spec.npy'
 def load_waveforms():
     X_list = np.load(str(datapath.joinpath(xfile)))
@@ -124,10 +124,8 @@ def combine_samples(arrs):
         combined = np.concatenate((combined, arr), axis=0)
     return combined
 
-## experiment
-## case 12, 14 for test
-## case 18 for validation
-## other case for traning
+
+
 x_list, y_list = load_waveforms()
 x_list = positve_samples(x_list)
 # x_list = split_by_channel(x_list)
